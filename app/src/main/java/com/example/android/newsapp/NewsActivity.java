@@ -34,7 +34,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     public static final String LOG_TAG = NewsActivity.class.getName();
 
     /* Id for identifying the loader */
-    private static final int ARTICLE_LOADER_ID = 1 ;
+    public static final int ARTICLE_LOADER_ID = 1 ;
 
     ArticleAdapter mAdapter ; //Global mAdapter that modifies on each bookListUpdating
 
@@ -98,7 +98,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         LoaderManager loaderManager = getLoaderManager();
 
         //When the activity is created or device is rotated, check if the loader with the ARTICLE_LOADER_ID exists.
-        // If exists, load the information from the BOOK_LOADER_ID loader.
+        // If exists, load the information from the ARTICLE_LOADER_ID loader.
         if(loaderManager.getLoader(ARTICLE_LOADER_ID) != null ){
             loaderManager.initLoader(ARTICLE_LOADER_ID, null, NewsActivity.this);
         }
