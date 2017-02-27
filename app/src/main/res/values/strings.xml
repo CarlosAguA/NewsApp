@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">News App</string>
+
+    <!-- Strings used for the preview of the list items -->
+    <string name="title">How entrepreneurs use technology to boost cashflow</string>
+    <string name="section">Guardian Small Business Network</string>
+    <string name="date">2017 </string>
+    <string name="url">www.iloveyou </string>
+
+</resources>
