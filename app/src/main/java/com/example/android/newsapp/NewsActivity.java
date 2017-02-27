@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +28,8 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     //**********************************************************************************************
     /** URL to query the Google Books for books information */
     private static final String THE_GUARDIAN_REQUEST_URL =
-            "https://content.guardianapis.com/search?q=technology&from-date=2017-01-14&api-key=test";
+           // "https://content.guardianapis.com/search?q=technology&from-date=2017-01-14&api-key=test";
+            "https://content.guardianapis.com/search?q=";
 
     public static final String LOG_TAG = NewsActivity.class.getName();
 
@@ -57,7 +61,18 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
-        return new ArticleLoader(this, THE_GUARDIAN_REQUEST_URL);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String category= sharedPrefs.getString(
+                getString(R.string.settings_category_key), getString(R.string.settings_category_default));
+        Uri baseUri = Uri.parse(THE_GUARDIAN_REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+        uriBuilder.appendQueryParameter("", category);
+        uriBuilder.appendQueryParameter("from-date","2017-01-14");
+        uriBuilder.appendQueryParameter("api-key", "test");
+
+        Log.i(LOG_TAG, uriBuilder.toString().replace("&=","") ) ;
+        return new ArticleLoader(this, uriBuilder.toString().replace("&=",""));
     }
 
     //**********************************************************************************************
