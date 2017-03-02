@@ -1,6 +1,7 @@
 package com.example.android.newsapp;
 
 import android.content.SharedPreferences;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -25,8 +26,6 @@ public class SettingsActivity extends AppCompatActivity  {
 
     public static class ArticlesPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
-        private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -34,12 +33,13 @@ public class SettingsActivity extends AppCompatActivity  {
 
             Log.i(LOG_TAG , "TEST: onCreate() Fragment ") ;
 
-            final Preference category = findPreference(getString(R.string.settings_category_key));
+            Preference category = findPreference(getString(R.string.settings_category_key));
+            //Update the summary ( Visualization ) of the orderBy preference when preference changes
             bindPreferenceSummaryToValue(category);
 
-            //listener on changed sort order preference:
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
+            Preference orderBy = findPreference(getString(R.string.settings_order_by_key));
+            //Update the summary ( Visualization ) of the orderBy preference when preference changes
+            bindPreferenceSummaryToValue(orderBy);
 
         }
 
@@ -49,7 +49,16 @@ public class SettingsActivity extends AppCompatActivity  {
             Log.i(LOG_TAG , "TEST: onPreferenceChange()") ;
 
             String stringValue = value.toString();
-            preference.setSummary(stringValue);
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int prefIndex = listPreference.findIndexOfValue(stringValue);
+                if (prefIndex >= 0) {
+                    CharSequence[] labels = listPreference.getEntries();
+                    preference.setSummary(labels[prefIndex]);
+                }
+            } else {
+                preference.setSummary(stringValue);
+            }
             return true;
         }
 
