@@ -62,13 +62,25 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
 
+        /*
+           Create an instance object of SharedPreferences File for retrieving key-value, storing
+           the value in a string, and appending the value to the search query of the GUARDIAN URL
+        */
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        //Retrieves the category key from sharedPrefs instance.
         String category= sharedPrefs.getString(
                 getString(R.string.settings_category_key), getString(R.string.settings_category_default));
+
+        //Retrieves the order-by key from sharedPrefs instance.
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key), getString(R.string.settings_order_by_default)) ;
+
         Uri baseUri = Uri.parse(THE_GUARDIAN_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
         uriBuilder.appendQueryParameter("", category);
-        uriBuilder.appendQueryParameter("from-date","2017-01-14");
+        uriBuilder.appendQueryParameter("from-date","2017-01-14"); // Quitar mas adelante y ver como acomodar por fecha
+        uriBuilder.appendQueryParameter("order-by", orderBy);
         uriBuilder.appendQueryParameter("api-key", "test");
 
         Log.i(LOG_TAG, uriBuilder.toString().replace("&=","") ) ;
