@@ -13,10 +13,13 @@ import static com.example.android.newsapp.NewsActivity.ARTICLE_LOADER_ID;
 
 public class SettingsActivity extends AppCompatActivity  {
 
+    public static final String LOG_TAG = SettingsActivity.class.getName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        Log.i(LOG_TAG , "TEST: onCreate() Settings ") ;
 
     }
 
@@ -29,38 +32,29 @@ public class SettingsActivity extends AppCompatActivity  {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_main);
 
+            Log.i(LOG_TAG , "TEST: onCreate() Fragment ") ;
+
             final Preference category = findPreference(getString(R.string.settings_category_key));
             bindPreferenceSummaryToValue(category);
 
             //listener on changed sort order preference:
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-            prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-                public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 
-                    /*This section is suppose to implement the restartLoader() method when the key :
-                    category changes and it will restart the Loader which is in the NewsActivity.
-                     Source : http://envyandroid.com/android-detect-preference-changes/
-                    */
-
-                    Log.i("PreferenceFragment", "Settings key changed: " + category);
-                    if(key.equals(category))
-                        getLoaderManager().restartLoader(ARTICLE_LOADER_ID, null, NewsActivity);
-
-                }
-            };
-
-            prefs.registerOnSharedPreferenceChangeListener(prefListener);
         }
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
+
+            Log.i(LOG_TAG , "TEST: onPreferenceChange()") ;
+
             String stringValue = value.toString();
             preference.setSummary(stringValue);
             return true;
         }
 
         private void bindPreferenceSummaryToValue(Preference preference) {
+            Log.i(LOG_TAG , "TEST: bindPreferenceSummaryToValue()") ;
             preference.setOnPreferenceChangeListener(this);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
             String preferenceString = preferences.getString(preference.getKey(), "");
