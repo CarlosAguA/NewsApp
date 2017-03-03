@@ -21,7 +21,8 @@ import java.util.List;
 
 import static android.R.attr.data;
 
-public class NewsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Article>> {
+public class NewsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Article>>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     //**********************************************************************************************
     //                          GLOBAL VARIABLES
@@ -37,6 +38,8 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     public static final int ARTICLE_LOADER_ID = 1 ;
 
     ArticleAdapter mAdapter ; //Global mAdapter that modifies on each bookListUpdating
+
+    LoaderManager loaderManager ;
 
     //**********************************************************************************************
     //                         LOADER   METHODS
@@ -107,7 +110,11 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         articleListView.setAdapter(mAdapter);
 
         // Get a reference to the LoaderManager, in order to interact with loaders.
-        LoaderManager loaderManager = getLoaderManager();
+       loaderManager = getLoaderManager();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //register the sharedPreferenceListener
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         //When the activity is created or device is rotated, check if the loader with the ARTICLE_LOADER_ID exists.
         // If exists, load the information from the ARTICLE_LOADER_ID loader.
@@ -136,6 +143,17 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if(key.contains((getString(R.string.settings_category_key) ) ) ) {
+            //The onCreateLoader method will read the preferences
+            loaderManager.restartLoader(ARTICLE_LOADER_ID,null, NewsActivity.this);
+        }else if (key.contains(getString(R.string.settings_order_by_key))){
+            //The onCreateLoader method will read the preferences
+            loaderManager.restartLoader(ARTICLE_LOADER_ID,null, NewsActivity.this);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
