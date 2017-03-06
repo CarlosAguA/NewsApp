@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.text.SimpleDateFormat;
@@ -27,7 +29,8 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     //**********************************************************************************************
     //                          GLOBAL VARIABLES
     //**********************************************************************************************
-    /** URL to query the Google Books for books information */
+
+    /** URL to query the "The Guardian Articles" for article´s information */
     private static final String THE_GUARDIAN_REQUEST_URL =
            // "https://content.guardianapis.com/search?q=technology&from-date=2017-01-14&api-key=test";
             "https://content.guardianapis.com/search?q=";
@@ -37,9 +40,9 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     /* Id for identifying the loader */
     public static final int ARTICLE_LOADER_ID = 1 ;
 
-    ArticleAdapter mAdapter ; //Global mAdapter that modifies on each bookListUpdating
+    ArticleAdapter mAdapter ; //Global mAdapter that modifies on each articlesListUpdating
 
-    LoaderManager loaderManager ;
+    LoaderManager loaderManager ; //Global loaderManager
 
     //**********************************************************************************************
     //                         LOADER   METHODS
@@ -66,8 +69,8 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
 
         /*
-           Create an instance object of SharedPreferences File for retrieving key-value, storing
-           the value in a string, and appending the value to the search query of the GUARDIAN URL
+        Create an instance object of SharedPreferences File for retrieving actual key-value pair,
+        storing the value in a string, and appending the value to the search query of the GUARDIAN URL
         */
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -82,7 +85,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri baseUri = Uri.parse(THE_GUARDIAN_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
         uriBuilder.appendQueryParameter("", category);
-        uriBuilder.appendQueryParameter("from-date","2017-01-14"); // Quitar mas adelante y ver como acomodar por fecha
         uriBuilder.appendQueryParameter("order-by", orderBy);
         uriBuilder.appendQueryParameter("api-key", "test");
 
@@ -102,18 +104,19 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         // Find a reference to the {@link ListView} in the layout
         ListView articleListView = (ListView) findViewById(R.id.list) ;
 
-        // Create a new adapter that takes an empty list of books as input
-        mAdapter = new ArticleAdapter(this, new ArrayList<Article>());
+        // Create a new adapter that takes an empty list of articles as input
+        mAdapter = new ArticleAdapter(this, new ArrayList <Article> ());
 
-        // Set the adapter on the {@link ListView}
-        // so the list can be populated in the user interface
+        // Set the adapter on the {@link ListView} so the list can be populated in the user interface
         articleListView.setAdapter(mAdapter);
 
         // Get a reference to the LoaderManager, in order to interact with loaders.
-       loaderManager = getLoaderManager();
+        loaderManager = getLoaderManager();
 
+        //Load the preferences and create an instance of sharedPreferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //register the sharedPreferenceListener
+
+        //register the sharedPreferenceListener; The activity implements OnSharedPreferenceChangeListener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         //When the activity is created or device is rotated, check if the loader with the ARTICLE_LOADER_ID exists.
@@ -125,10 +128,32 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         // Initialize the loader. Pass in the int ID constant defined above and pass in null for
         // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
         // because this activity implements the LoaderCallbacks interface).
-        loaderManager.initLoader(ARTICLE_LOADER_ID,null, NewsActivity.this);
+        loaderManager.initLoader(ARTICLE_LOADER_ID, null, NewsActivity.this);
         Log.i(LOG_TAG, "TEST  : initloader() ");
 
         actualDate();
+
+        //onItemClick Listener gets executed when an item on the listView is clicked in order to open
+        // the URL or webpage from the showed article
+        articleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position,
+                                    long id) {
+
+                Log.i("Position : ", String.valueOf(position) ) ;
+                //Create object instance from Article class and get the position of the clickedItem
+                Article article = mAdapter.getItem(position) ;
+                Log.i("NewsActivity", "Current article: " + article.toString() );
+
+                //Get the assigned url query from the list item.
+                Log.v("Article Activity", "Article URL: " + article.getUrl() );
+                String url = article.getUrl() ;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+
     }
 
     //**********************************************************************************************
@@ -143,6 +168,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+    //Callback method when OnSharedPreferenceChangeListener is triggered
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
@@ -153,6 +179,15 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
             //The onCreateLoader method will read the preferences
             loaderManager.restartLoader(ARTICLE_LOADER_ID,null, NewsActivity.this);
         }
+    }
+
+    //un-register the sharedPreferenceListener
+    //Good practice to free up resources / memory according to
+    //https://discussions.udacity.com/t/implementing-a-restarloader-on-a-different-activity-is-a-good-approach/225240/6
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
