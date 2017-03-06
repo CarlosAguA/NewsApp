@@ -33,9 +33,7 @@ public class QueryUtils {
     }
 
     public static List<Article> fetchArticleData(String requestUrl) {
-
-        Log.i(LOG_TAG, "TEST  : Fetch Article Data" + requestUrl );
-
+        
         URL url = createUrl(requestUrl); //Instantiate URL object and execute createURL(@String) method
 
         // Perform HTTP request to the URL and receive a JSON response back

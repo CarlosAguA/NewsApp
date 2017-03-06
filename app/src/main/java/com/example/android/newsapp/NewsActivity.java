@@ -50,7 +50,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
 
-        Log.i(LOG_TAG, "TEST : onLoadFinished()" ) ;
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
 
@@ -63,14 +62,12 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Article>> loader) {
-        Log.i(LOG_TAG, "TEST : onLoaderReset()" ) ;
         mAdapter.clear();
     }
 
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
 
-        Log.i(LOG_TAG, "TEST : onCreateLoader()" ) ;
         /*
         Create an instance object of SharedPreferences File for retrieving actual key-value pair,
         storing the value in a string, and appending the value to the search query of the GUARDIAN URL
@@ -91,7 +88,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         uriBuilder.appendQueryParameter("order-by", orderBy);
         uriBuilder.appendQueryParameter("api-key", "test");
 
-        Log.i(LOG_TAG, uriBuilder.toString().replace("&=","") ) ;
         return new ArticleLoader(this, uriBuilder.toString().replace("&=",""));
     }
 
@@ -125,7 +121,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         //When the activity is created or device is rotated, check if the loader with the ARTICLE_LOADER_ID exists.
         // If exists, load the information from the ARTICLE_LOADER_ID loader.
         if(loaderManager.getLoader(ARTICLE_LOADER_ID) != null ){
-            Log.i(LOG_TAG, "TEST : initLoader() after getLoader()" ) ;
             loaderManager.initLoader(ARTICLE_LOADER_ID, null, NewsActivity.this);
         }
 
@@ -133,8 +128,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
         // because this activity implements the LoaderCallbacks interface).
         loaderManager.initLoader(ARTICLE_LOADER_ID, null, NewsActivity.this);
-        Log.i(LOG_TAG, "TEST  : initloader() ");
-
 
         //onItemClick Listener gets executed when an item on the listView is clicked in order to open
         // the URL or webpage from the showed article
@@ -143,13 +136,10 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onItemClick(AdapterView<?> adapterView, View view, int position,
                                     long id) {
 
-                Log.i("Position : ", String.valueOf(position) ) ;
                 //Create object instance from Article class and get the position of the clickedItem
                 Article article = mAdapter.getItem(position) ;
-                Log.i("NewsActivity", "Current article: " + article.toString() );
 
                 //Get the assigned url query from the list item.
-                Log.v("Article Activity", "Article URL: " + article.getUrl() );
                 String url = article.getUrl() ;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));

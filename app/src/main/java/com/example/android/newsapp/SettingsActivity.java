@@ -20,7 +20,6 @@ public class SettingsActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Log.i(LOG_TAG , "TEST: onCreate() Settings ") ;
 
     }
 
@@ -31,22 +30,21 @@ public class SettingsActivity extends AppCompatActivity  {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_main);
 
-            Log.i(LOG_TAG , "TEST: onCreate() Fragment ") ;
-
+            //Retrieves the key value from category´s Preference instance
             Preference category = findPreference(getString(R.string.settings_category_key));
-            //Update the summary ( Visualization ) of the orderBy preference when preference changes
+            //Update the summary ( Visualization ) of the category preference when preference changes
             bindPreferenceSummaryToValue(category);
 
+            //Retrieves the key value from orderBy´s Preference instance
             Preference orderBy = findPreference(getString(R.string.settings_order_by_key));
             //Update the summary ( Visualization ) of the orderBy preference when preference changes
             bindPreferenceSummaryToValue(orderBy);
 
         }
 
+        //Callback method executed when OnPreferenceChangeListener is executed and just returns a boolean value
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
-
-            Log.i(LOG_TAG , "TEST: onPreferenceChange()") ;
 
             String stringValue = value.toString();
             if (preference instanceof ListPreference) {
@@ -62,8 +60,9 @@ public class SettingsActivity extends AppCompatActivity  {
             return true;
         }
 
+        //Method that updates the summary on the settings Activity
         private void bindPreferenceSummaryToValue(Preference preference) {
-            Log.i(LOG_TAG , "TEST: bindPreferenceSummaryToValue()") ;
+
             preference.setOnPreferenceChangeListener(this);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
             String preferenceString = preferences.getString(preference.getKey(), "");
