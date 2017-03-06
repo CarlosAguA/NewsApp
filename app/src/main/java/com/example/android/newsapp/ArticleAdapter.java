@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,20 +47,28 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 
         // Find the TextView with view ID tv1 for setting title
         TextView titleTextView = (TextView) listItemView.findViewById(R.id.tv1) ;
-        // Display the magnitude of the current book in that TextView
+        // Display the title of the current article in that TextView
         titleTextView.setText(currentArticle.getTitle()) ;
 
-        // Find the TextView with view ID tv2 for setting title
+        // Find the TextView with view ID tv2 for setting section
         TextView sectionTextView = (TextView) listItemView.findViewById(R.id.tv2) ;
-        // Display the magnitude of the current book in that TextView
+        // Display the section of the current article in that TextView
         sectionTextView.setText(currentArticle.getSection()) ;
 
-        // Find the TextView with view ID tv1 for setting title
+        // Find the TextView with view ID tv1 for setting date
         TextView dateTextView = (TextView) listItemView.findViewById(R.id.tv3) ;
-        // Display the magnitude of the current book in that TextView
-        dateTextView.setText(currentArticle.getDate()) ;
+        //Format the date String
+        String date = currentArticle.getDate() ;
+        if (date.contains("T")) {
+            String[] separated = date.split("T");
+            // Display the date of the current article in that TextView
+            dateTextView.setText(separated[0]) ;
+        }else{
+            dateTextView.setText(date);
+        }
 
         return listItemView ;
     }
+
 
 }
