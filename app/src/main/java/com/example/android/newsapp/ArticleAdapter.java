@@ -18,7 +18,6 @@ import java.util.List;
 
 public class ArticleAdapter extends ArrayAdapter<Article> {
 
-
     private Context context ;
     private Article currentArticle ;
 
@@ -41,7 +40,6 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.list_article_item, parent, false);
         }
-
 
         currentArticle = getItem(position);
 
@@ -69,6 +67,5 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 
         return listItemView ;
     }
-
 
 }

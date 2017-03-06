@@ -37,14 +37,4 @@
         android:paddingTop="5dp"
         android:gravity="end" />
 
-    <!--
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv4"
-        tools:text="@string/url"
-        android:textSize="16sp"
-        android:paddingTop="5dp"/>
-        -->
-
 </LinearLayout>

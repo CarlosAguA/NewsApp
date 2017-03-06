@@ -32,7 +32,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /** URL to query the "The Guardian Articles" for article´s information */
     private static final String THE_GUARDIAN_REQUEST_URL =
-           // "https://content.guardianapis.com/search?q=technology&from-date=2017-01-14&api-key=test";
             "https://content.guardianapis.com/search?q=";
 
     public static final String LOG_TAG = NewsActivity.class.getName();
@@ -50,6 +49,8 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
+
+        Log.i(LOG_TAG, "TEST : onLoadFinished()" ) ;
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
 
@@ -62,12 +63,14 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<List<Article>> loader) {
+        Log.i(LOG_TAG, "TEST : onLoaderReset()" ) ;
         mAdapter.clear();
     }
 
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
 
+        Log.i(LOG_TAG, "TEST : onCreateLoader()" ) ;
         /*
         Create an instance object of SharedPreferences File for retrieving actual key-value pair,
         storing the value in a string, and appending the value to the search query of the GUARDIAN URL
@@ -122,6 +125,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         //When the activity is created or device is rotated, check if the loader with the ARTICLE_LOADER_ID exists.
         // If exists, load the information from the ARTICLE_LOADER_ID loader.
         if(loaderManager.getLoader(ARTICLE_LOADER_ID) != null ){
+            Log.i(LOG_TAG, "TEST : initLoader() after getLoader()" ) ;
             loaderManager.initLoader(ARTICLE_LOADER_ID, null, NewsActivity.this);
         }
 
@@ -131,7 +135,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         loaderManager.initLoader(ARTICLE_LOADER_ID, null, NewsActivity.this);
         Log.i(LOG_TAG, "TEST  : initloader() ");
 
-        actualDate();
 
         //onItemClick Listener gets executed when an item on the listView is clicked in order to open
         // the URL or webpage from the showed article
@@ -159,14 +162,6 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
     //**********************************************************************************************
     //                        GLOBAL  METHODS
     //**********************************************************************************************
-
-    private void actualDate() {
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("yyyy/MM/dd ");
-        Log.i(LOG_TAG, "TEST: " + mdformat.format(calendar.getTime() ) );
-
-    }
 
     //Callback method when OnSharedPreferenceChangeListener is triggered
     @Override
