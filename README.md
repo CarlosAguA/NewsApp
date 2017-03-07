@@ -21,7 +21,7 @@ In this project different topics are covered like :
 6. OnItemClickListener and OnSharedPreferenceChangedListener
 7. Adapter and ListView. 
 
-An Article java class was created in order to parse title, category, date and url in order to implement the functionality of the code. This states are stored in each instance of an article object which are added to an ArrayList<Article>. 
+An Article java class was created in order to parse title, category, date and url in order to implement the functionality of the code. This states are stored in each instance of an article object which are added to an ArrayList of type Article. 
 
 The Loader implemented was useful in order to respond to screen rotation or other phases of the Activity Lifecycle that could restart the method onCreate(), so that when the loader already exists, the infomation will keep on the screen. 
 
